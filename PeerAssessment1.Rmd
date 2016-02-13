@@ -1,3 +1,11 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+## Loading and preprocessing the data
 
 ```{r}
 if(!require(plyr)){
@@ -20,12 +28,12 @@ if(!require(ggplot2)){
 	library(ggplot2)
 }
 ```
-## Unzip the file and load files in the specific directory
+#### Unzip the file and load files in the specific directory
+
 ```{r}
 zip_file <- file.path("activity.zip")
 unzip("activity.zip")
 ```
-##Load data and process/transform the data as require
 ```{r}
 activity <- read.csv("activity.csv",colClasses = c("numeric", "character","integer"))
 
@@ -34,8 +42,9 @@ str(activity)
 summary(activity)
 names(activity)
 ```
-# Part One
-## mean total number of steps taken per day. Ignore the missing values in the dataset.
+## What is mean total number of steps taken per day?
+#### mean total number of steps taken per day. Ignore the missing values in the dataset.
+
 ```{r}
 
 total_steps <- tapply(activity$steps, activity$date, FUN = sum, na.rm = TRUE)
@@ -45,7 +54,6 @@ mean(total_steps)
 median(total_steps)
 
 ```
-## Calculate the total number of steps taken per day
 ```{r}
 steps <- activity
 steps <- filter(steps,!is.na(steps))
@@ -71,7 +79,6 @@ ggplot(steps, aes(x=steps)) +
 #dev.off()
 
 ```
-# Part Two
 ## What is the average daily activity pattern?
 ```{r}
 daily <- activity
@@ -87,7 +94,7 @@ names(daily)
 head(daily)
 tail(daily)
 ```
-## time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+#### time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 ```{r, echo=FALSE}
 plot(daily, type = "l",col="blue",xlab="5-minute interval", ylab="Average steps")
@@ -109,7 +116,9 @@ count(activity)-count(na.omit(activity))
 sum(is.na(activity))
 ```
 ## Imputing missing values
-##Create a new dataset where missing values in the dataset are replaced with the mean/median for that 5-minute interval
+
+#### Create a new dataset where missing values in the dataset are replaced with the mean/median for that 5-minute interval
+
 ```{r}
 steps_nafilledin <- activity
 steps_nafilledin <- group_by(steps_nafilledin, interval) 
@@ -169,9 +178,10 @@ par(mfrow=c(2,1))
 hist(total_steps,col="blue")
 hist(total_steps_nafilledin,col="blue")
 ```
-#Part 3
+
 ## What are the differences in activity patterns between weekdays and weekends? 
-## the dataset used in this part has filled-in missing values. 
+
+#### the dataset used in this part has filled-in missing values. 
 ```{r}
 dayofweek <- function(date) {
     if (weekdays(as.Date(date)) %in% c("Saturday", "Sunday")) {
